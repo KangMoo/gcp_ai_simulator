@@ -29,8 +29,9 @@ public class ScenarioRunner {
                 nowPhase.run();
             } catch (Exception e){
                 log.warn("Err Occurs while running phase [{}]", nowPhase, e);
-                return;
+                break;
             }
         }
+        scenario.getLocalSound().stop();
     }
 }

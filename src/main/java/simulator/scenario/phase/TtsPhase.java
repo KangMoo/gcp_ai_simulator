@@ -23,6 +23,8 @@ public class TtsPhase extends Phase {
     @Override
     public void run() throws ScriptException {
         System.out.println("TTS : " + scenario.getEngine().eval("`" + value + "`"));
+        byte[] result = scenario.getTtsConverter().convertText((String)(scenario.getEngine().eval("`" + value + "`"))).toByteArray();
+        scenario.getLocalSound().getSpeakers().write(result, 0, result.length);
         // Just TTS
     }
 }

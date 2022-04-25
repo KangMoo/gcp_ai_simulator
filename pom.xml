@@ -104,6 +104,12 @@
             <artifactId>jstl</artifactId>
             <version>1.2</version>
         </dependency>
+
+        <dependency>
+            <groupId>ai.media</groupId>
+            <artifactId>voice-recognition</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 
 </project>
