@@ -12,6 +12,6 @@ public class SimMain {
 
     public static void main(String[] args) {
         ((LoggerContext) LoggerFactory.getILoggerFactory()).getLogger("io.grpc.netty").setLevel(Level.INFO);
-        new ScenarioRunner().run("/Users/heokangmoo/Downloads/aisim/scenario.xml");
+        new ScenarioRunner("scenario.xml").run();
     }
 }

@@ -10,10 +10,15 @@ import static org.slf4j.LoggerFactory.getLogger;
 /**
  * @author kangmoo Heo
  */
-public class ScenarioRunner {
+public class ScenarioRunner implements Runnable {
     private static final Logger log = getLogger(ScenarioRunner.class);
+    private String xmlFile;
 
-    public void run(String xmlFile) {
+    public ScenarioRunner(String xmlFile) {
+        this.xmlFile = xmlFile;
+    }
+
+    public void run() {
         Scenario scenario;
         try {
             scenario = ScenarioBuilder.buildScenario(new File(xmlFile));
