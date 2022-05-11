@@ -36,12 +36,7 @@ public class SttPhase extends Phase {
 
 
         if (digit) {
-            SttConverter sttConverter = SttConverter.newBuilder()
-                    .setEncoding(AudioEncoding.LINEAR16)
-                    .setSampleRateHertz(16000)
-                    .setLanguageCode("ko-KR")
-                    .addSpeechContexts(SpeechContext.newBuilder().addPhrases("$OOV_CLASS_DIGIT_SEQUENCE").build())
-                    .build();
+            SttConverter sttConverter = scenario.getSttConverter();
             sttConverter.start();
             scenario.getLocalSound().setOnDataFromMike(sttConverter::inputData);
             Thread.sleep(duration + 100);
@@ -60,12 +55,7 @@ public class SttPhase extends Phase {
             if (result.equals("-1")) return;
             scenario.getEngine().eval("var " + value + "=" + result + ";");
         } else {
-            SttConverter sttConverter = SttConverter.newBuilder()
-                    .setEncoding(AudioEncoding.LINEAR16)
-                    .setSampleRateHertz(16000)
-                    .setLanguageCode("ko-KR")
-                    .build();
-
+            SttConverter sttConverter = scenario.getSttConverter();
             sttConverter.start();
             scenario.getLocalSound().setOnDataFromMike(sttConverter::inputData);
             Thread.sleep(duration + 100);
