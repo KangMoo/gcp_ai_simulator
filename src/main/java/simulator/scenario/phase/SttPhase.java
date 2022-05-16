@@ -3,15 +3,12 @@ package simulator.scenario.phase;
 import ai.media.stt.SttConverter;
 import lombok.Getter;
 import lombok.ToString;
-import org.dom4j.util.StringUtils;
 import simulator.scenario.Scenario;
 import simulator.scenario.phase.base.Phase;
-import simulator.utils.kr2num;
+import simulator.utils.Kr2Num;
 
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author kangmoo Heo
@@ -43,7 +40,7 @@ public class SttPhase extends Phase {
         String result = Optional.ofNullable(sttConverter.getResultTexts()).filter(o -> !o.isEmpty()).map(o -> o.get(o.size() - 1)).orElse(null);
 
         AtomicReference<String> finalResult = new AtomicReference<>(result);
-        kr2num.han2NumMap.keySet().forEach(o -> finalResult.set(finalResult.get().replaceAll(o, kr2num.han2NumMap.get(o))));
+        Kr2Num.han2NumMap.keySet().forEach(o -> finalResult.set(finalResult.get().replaceAll(o, Kr2Num.han2NumMap.get(o))));
         result = finalResult.get();
 
         System.out.println("STT : " + result);

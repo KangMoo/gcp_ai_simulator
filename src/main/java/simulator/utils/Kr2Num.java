@@ -11,14 +11,14 @@ import java.util.Set;
  * @author kangmoo Heo
  */
 @Data
-public class kr2num {
-        public static Map<String, Integer> cardinalNum = new HashMap<>();
-        public static Map<String, Integer> ordinalNumUnits = new HashMap<>();
-        public static Map<String, Integer> ordinalNumTens = new HashMap<>();
-        public static Set<String> ordUnit = new HashSet<>();
-        public static Map<String, String> han2NumMap = new HashMap<>();
+public class Kr2Num {
+    public static Map<String, Integer> cardinalNum = new HashMap<>();
+    public static Map<String, Integer> ordinalNumUnits = new HashMap<>();
+    public static Map<String, Integer> ordinalNumTens = new HashMap<>();
+    public static Set<String> ordUnit = new HashSet<>();
+    public static Map<String, String> han2NumMap = new HashMap<>();
 
-        static {
+    static {
         ordinalNumUnits.put("한", 1);
         ordinalNumUnits.put("두", 2);
         ordinalNumUnits.put("세", 3);
