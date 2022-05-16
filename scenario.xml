@@ -3,7 +3,7 @@
     <tts>안녕하세요. 미스터피자입니다. 본 매장은 배달 전용 매장입니다.</tts>
 
     <mark>pizza_select</mark>
-    <tts>주문하실 피자의 이름을 말씀해주세요</tts>
+    <tts>주문하실 피자의 이름을 말씀해주세요. 피자는 페퍼로니, 고구마, 포테이토가 제공됩니다.</tts>
     <stt duration="5000">pizza_menu</stt>
 
     <if>
