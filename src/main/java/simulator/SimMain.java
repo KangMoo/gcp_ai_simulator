@@ -11,7 +11,8 @@ import simulator.scenario.ScenarioRunner;
 public class SimMain {
 
     public static void main(String[] args) {
+        // GOOGLE_APPLICATION_CREDENTIALS=/Users/heokangmoo/.key/esoteric-cider-346402-d9eba3f11e9d.json
         ((LoggerContext) LoggerFactory.getILoggerFactory()).getLogger("io.grpc.netty").setLevel(Level.INFO);
-        new ScenarioRunner("scenario.xml").run();
+        new ScenarioRunner("scenario2.xml").run();
     }
 }
