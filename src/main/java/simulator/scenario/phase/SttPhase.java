@@ -40,7 +40,11 @@ public class SttPhase extends Phase {
         String result = Optional.ofNullable(sttConverter.getResultTexts()).filter(o -> !o.isEmpty()).map(o -> o.get(o.size() - 1)).orElse(null);
 
         AtomicReference<String> finalResult = new AtomicReference<>(result);
-        Kr2Num.han2NumMap.keySet().forEach(o -> finalResult.set(finalResult.get().replaceAll(o, Kr2Num.han2NumMap.get(o))));
+        Kr2Num.han2NumMap.keySet().forEach(o -> {
+            if(Kr2Num.han2NumMap.get(o) != null){
+                finalResult.set(finalResult.get().replace(o, Kr2Num.han2NumMap.get(o)));
+            }
+        });
         result = finalResult.get();
 
         System.out.println("STT : " + result);

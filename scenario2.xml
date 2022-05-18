@@ -95,12 +95,13 @@
     <tts>피자의 주문 수량을 말씀해주세요</tts>
     <stt duration="5000" digit="true">msg</stt>
     <if>
-        <expression><![CDATA[typeof msg === 'undefined' || msg.match(/\d+/g) != null)]]></expression>
+        <expression><![CDATA[typeof msg === 'undefined' || msg.match(/\d+/g) == null]]></expression>
         <jump>recognize_fail</jump>
     </if>
     <jump>pizza_select</jump>
 
     <mark>pizza_select_done</mark>
+    <tts>네. ${pizza_menu} 피자 ${pizza_edge} 엣지 ${pizza_size} 사이즈로 ${pizza_count}개 주문 하셨습니다. </tts>
     <run><![CDATA[msg=null]]></run>
 
     <mark>drink_select</mark>
@@ -146,15 +147,14 @@
     <tts>음료 개수를 말씀해주세요.</tts>
     <stt duration="5000" digit="true">msg</stt>
     <if>
-        <expression><![CDATA[typeof msg === 'undefined' || msg.match(/\d+/g) != null)]]></expression>
+        <expression><![CDATA[typeof msg === 'undefined' || msg.match(/\d+/g) == null]]></expression>
         <jump>recognize_fail</jump>
     </if>
     <jump>drink_select</jump>
 
     <mark>drink_select_done</mark>
 
-    <tts>주문하신 피자는 ${pizza_menu}, 사이즈는 ${pizza_size}, 엣지는 ${pizza_edge}, 주문수량은 ${pizza_count} 입니다.
-        음료는 ${drink_menu}, 갯수는 ${drink_count}입니다. 주문하신 정보가 맞습니까?</tts>
+    <tts>네. 주문 확인하겠습니다. 주문하신 피자는 ${pizza_menu}, 사이즈는 ${pizza_size}, 엣지는 ${pizza_edge}, 주문수량은 ${pizza_count}개 입니다. 음료는 ${drink_menu}, 갯수는 ${drink_count}개 입니다. 주문하신 정보가 맞습니까?</tts>
     <stt duration="5000">confirm</stt>
     <if>
         <expression><![CDATA[typeof confirm !== 'undefined' && confirm.includes("아니오")]]></expression>
@@ -172,7 +172,14 @@
 
     <mark>recognize_fail</mark>
     <tts>죄송합니다. 말씀을 이해하지 못했습니다</tts>
-    <jump>pizza_select</jump>
+    <if>
+        <expression><![CDATA[
+        typeof pizza_menu === 'undefined' || pizza_menu == null ||
+        typeof pizza_size === 'undefined' || pizza_size == null ||
+        typeof pizza_edge === 'undefined' || pizza_edge == null]]></expression>
+        <jump>pizza_select</jump>
+    </if>
+    <jump>drink_select</jump>
 
     <mark>reorder</mark>
     <tts>주문 메뉴를 다시 받겠습니다</tts>
