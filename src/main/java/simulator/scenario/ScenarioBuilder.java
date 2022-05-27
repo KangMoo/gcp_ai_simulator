@@ -28,6 +28,10 @@ public class ScenarioBuilder {
     private static final Logger log = getLogger(ScenarioBuilder.class);
     private static DocumentBuilder documentbuilder;
 
+    private ScenarioBuilder(){
+
+    }
+
     static {
         try {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -80,6 +84,8 @@ public class ScenarioBuilder {
                     break;
                 case "sleep":
                     scenario.getPhases().add(new SleepPhase(scenario, Long.parseLong(node.getTextContent())));
+                    break;
+                default:
                     break;
             }
         });

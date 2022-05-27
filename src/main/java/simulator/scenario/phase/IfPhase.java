@@ -1,6 +1,5 @@
 package simulator.scenario.phase;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.ToString;
 import simulator.scenario.Scenario;

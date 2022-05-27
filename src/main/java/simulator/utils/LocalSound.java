@@ -1,6 +1,5 @@
 package simulator.utils;
 
-import javassist.bytecode.analysis.Executor;
 import lombok.Data;
 
 import javax.sound.sampled.*;
@@ -19,7 +18,7 @@ public class LocalSound {
     private TargetDataLine microphone;
     private SourceDataLine speakers;
     private AtomicBoolean isQuit = new AtomicBoolean(false);
-    public Consumer<byte[]> onDataFromMike = (o) -> {};
+    private Consumer<byte[]> onDataFromMike = o -> {};
 
     public void start(){
         AudioFormat format = new AudioFormat(16000, 16, 1, true, false);
@@ -32,7 +31,6 @@ public class LocalSound {
 
             ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-            int CHUNK_SIZE = 1024;
             byte[] data = new byte[microphone.getBufferSize() / 5];
             microphone.start();
             AudioInputStream audio = new AudioInputStream(microphone);

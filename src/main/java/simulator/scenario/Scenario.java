@@ -27,7 +27,6 @@ public class Scenario {
     private AtomicInteger currentPos = new AtomicInteger();
     private ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
     private SttConverter sttConverter;
-    // private SttConverter sttDigitConverter;
     private TtsConverter ttsConverter;
     private LocalSound localSound = new LocalSound();
 
@@ -60,13 +59,6 @@ public class Scenario {
                 .setLanguageCode("ko-KR")
                 .addSpeechContexts(speechContext)
                 .build();
-
-//        sttDigitConverter = SttConverter.newBuilder()
-//                .setEncoding(AudioEncoding.LINEAR16)
-//                .setSampleRateHertz(16000)
-//                .setLanguageCode("ko-KR")
-//                .addSpeechContexts(SpeechContext.newBuilder().addPhrases("$OOV_CLASS_ALPHANUMERIC_SEQUENCE").build())
-//                .build();
 
         ttsConverter = TtsConverter.newBuilder()
                 .setAudioEncoding(com.google.cloud.texttospeech.v1.AudioEncoding.LINEAR16)

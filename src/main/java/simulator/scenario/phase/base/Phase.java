@@ -9,7 +9,7 @@ import simulator.scenario.Scenario;
 public abstract class Phase {
     protected final Scenario scenario;
 
-    public Phase(Scenario scenario) {
+    protected Phase(Scenario scenario) {
         this.scenario = scenario;
     }
 

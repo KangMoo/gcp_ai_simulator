@@ -3,6 +3,7 @@ package simulator.scenario.phase;
 import ai.media.stt.SttConverter;
 import lombok.Getter;
 import lombok.ToString;
+import org.slf4j.Logger;
 import simulator.scenario.Scenario;
 import simulator.scenario.phase.base.Phase;
 import simulator.utils.Kr2Num;
@@ -10,12 +11,15 @@ import simulator.utils.Kr2Num;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 /**
  * @author kangmoo Heo
  */
 @Getter
 @ToString
 public class SttPhase extends Phase {
+    private static final Logger log = getLogger(SttPhase.class);
     private final String value;
     private final long duration;
     private final boolean digit;
@@ -47,7 +51,7 @@ public class SttPhase extends Phase {
         });
         result = finalResult.get();
 
-        System.out.println("STT : " + result);
+        log.debug("STT : {}", result);
         if (result != null) scenario.getEngine().eval("var " + value + "=\"" + result + "\";");
     }
 }
