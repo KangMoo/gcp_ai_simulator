@@ -1,17 +1,18 @@
 package simulator.scenario.phase.base;
 
-import simulator.scenario.Scenario;
+import lombok.Getter;
+import lombok.ToString;
+import org.simpleframework.xml.Attribute;
+import org.simpleframework.xml.Element;
 
 /**
  * @author kangmoo Heo
  */
-
+@Getter
+@ToString
 public abstract class Phase {
-    protected final Scenario scenario;
-
-    protected Phase(Scenario scenario) {
-        this.scenario = scenario;
-    }
-
-    public abstract void run() throws Exception;
+    @Attribute(name = "id", required = false)
+    protected String id;
+    @Element(name = "goto", required = false)
+    protected String nextPhase;
 }

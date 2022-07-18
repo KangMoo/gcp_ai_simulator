@@ -1,102 +1,81 @@
 package simulator.scenario;
 
-import org.slf4j.Logger;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-import simulator.scenario.phase.*;
+import ai.media.stt.SttConverter;
+import ai.media.tts.TtsConverter;
+import com.google.cloud.speech.v1.RecognitionConfig.AudioEncoding;
+import com.google.cloud.speech.v1.SpeechContext;
+import com.google.cloud.texttospeech.v1.SsmlVoiceGender;
+import org.simpleframework.xml.Serializer;
+import org.simpleframework.xml.core.Persister;
+import simulator.scenario.phase.Scenario;
+import simulator.scenario.phase.base.Phase;
+import simulator.utils.Kr2Num;
+import simulator.utils.LocalSound;
 
-import javax.xml.XMLConstants;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
-import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
-
-import static org.slf4j.LoggerFactory.getLogger;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author kangmoo Heo
  */
 public class ScenarioBuilder {
-    private static final Logger log = getLogger(ScenarioBuilder.class);
-    private static DocumentBuilder documentbuilder;
 
-    private ScenarioBuilder(){
-
-    }
-
-    static {
-        try {
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            dbFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-            dbFactory.setValidating(true);
-            dbFactory.setNamespaceAware(true);
-            dbFactory.setFeature("http://xml.org/sax/features/namespaces", false);
-            dbFactory.setFeature("http://xml.org/sax/features/validation", false);
-            dbFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-dtd-grammar", false);
-            dbFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
-            dbFactory.setIgnoringElementContentWhitespace(true);
-            dbFactory.setIgnoringComments(true);
-            dbFactory.setCoalescing(true);
-            documentbuilder = dbFactory.newDocumentBuilder();
-        } catch (Exception e) {
-            log.error("Fail to make document builder", e);
-            System.exit(-1);
+    public static ScenarioInfo buildScenarioInfo(File scenarioXml) throws Exception {
+        Scenario scenario = parseScenarioFile(scenarioXml);
+        Map<String, Phase> phases = new ConcurrentHashMap<>();
+        Field[] fields = Scenario.class.getDeclaredFields();
+        for (Field field : fields) {
+            field.setAccessible(true);
+            ((List<Phase>) field.get(scenario)).forEach(o -> phases.put(o.getId(), o));
         }
+
+        SpeechContext.Builder builder = SpeechContext.newBuilder()
+                .addPhrases("고구마").setBoost(50.0F)
+                .addPhrases("페퍼로니").setBoost(50.0F)
+                .addPhrases("포테이토").setBoost(50.0F)
+                .addPhrases("레귤러").setBoost(50.0F)
+                .addPhrases("라지").setBoost(50.0F)
+                .addPhrases("오리진").setBoost(50.0F)
+                .addPhrases("골드").setBoost(50.0F)
+                .addPhrases("크림치즈").setBoost(50.0F)
+                .addPhrases("에그타르트").setBoost(50.0F)
+                .addPhrases("치즈캡").setBoost(50.0F)
+                .addPhrases("피자").setBoost(50.0F)
+                .addPhrases("사이즈").setBoost(50.0F)
+                .addPhrases("엣지").setBoost(50.0F)
+                .addPhrases("네").setBoost(50.0F)
+                .addPhrases("예").setBoost(50.0F)
+                .addPhrases("아니오").setBoost(50.0F)
+                .addPhrases("콜라").setBoost(50.0F)
+                .addPhrases("사이다").setBoost(50.0F);
+        Kr2Num.han2NumMap.keySet().forEach(o -> builder.addPhrases(o).setBoost(20.0F));
+        SpeechContext speechContext = builder.build();
+
+        SttConverter sttConverter = SttConverter.newBuilder()
+                .setEncoding(AudioEncoding.LINEAR16)
+                .setSampleRateHertz(16000)
+                .setLanguageCode("ko-KR")
+                .addSpeechContexts(speechContext)
+                .build();
+
+        TtsConverter ttsConverter = TtsConverter.newBuilder()
+                .setAudioEncoding(com.google.cloud.texttospeech.v1.AudioEncoding.LINEAR16)
+                .setSampleRateHertz(16000)
+                .setLanguageCode("ko-KR")
+                .setSsmlGender(SsmlVoiceGender.NEUTRAL)
+                .build();
+
+        LocalSound localSound = new LocalSound();
+        localSound.start();
+
+        return new ScenarioInfo(sttConverter, ttsConverter, localSound, phases);
     }
 
-    public static Scenario buildScenario(File xmlFile) throws IOException, SAXException {
-        Document doc = documentbuilder.parse(xmlFile);
-        Element element = doc.getDocumentElement();
-
-        Scenario scenario = new Scenario();
-        scenario.setName(Optional.ofNullable(element.getAttributes()).map(o -> o.getNamedItem("name")).map(Node::getTextContent).orElse(null));
-        nodeList2Stream(element.getChildNodes()).forEach(node -> {
-            switch (node.getNodeName()) {
-                case "tts":
-                    scenario.getPhases().add(new TtsPhase(scenario, node.getTextContent()));
-                    break;
-                case "stt":
-                    scenario.getPhases().add(new SttPhase(scenario, node.getTextContent(),
-                            Integer.parseInt(Optional.of(node.getAttributes()).map(o -> o.getNamedItem("duration")).map(Node::getTextContent).orElse("5000")),
-                            Boolean.parseBoolean(Optional.of(node.getAttributes()).map(o -> o.getNamedItem("digit")).map(Node::getTextContent).orElse("false"))));
-                    break;
-                case "mark":
-                    scenario.getPhases().add(new MarkPhase(scenario, node.getTextContent()));
-                    break;
-                case "run":
-                    scenario.getPhases().add(new RunPhase(scenario, node.getTextContent()));
-                    break;
-                case "jump":
-                    scenario.getPhases().add(new JumpPhase(scenario, node.getTextContent()));
-                    break;
-                case "if":
-                    scenario.getPhases().add(new IfPhase(scenario,
-                            nodeList2Stream(node.getChildNodes()).filter(o -> o.getNodeName().equals("expression")).map(Node::getTextContent).findFirst().orElse(null),
-                            new JumpPhase(scenario, nodeList2Stream(node.getChildNodes()).filter(o -> o.getNodeName().equals("jump")).map(Node::getTextContent).findFirst().orElse(null))));
-                    break;
-                case "sleep":
-                    scenario.getPhases().add(new SleepPhase(scenario, Long.parseLong(node.getTextContent())));
-                    break;
-                default:
-                    break;
-            }
-        });
-        return scenario;
-    }
-
-    public static Stream<Node> nodeList2Stream(NodeList nodeList) {
-        return IntStream.range(0, nodeList.getLength()).mapToObj(nodeList::item);
-    }
-
-    public static List<Node> nodeListMapping(NodeList nodeList) {
-        return IntStream.range(0, nodeList.getLength()).mapToObj(nodeList::item).collect(Collectors.toList());
+    private static Scenario parseScenarioFile(File scenarioXml) throws Exception {
+        Serializer serializer = new Persister();
+        return serializer.read(Scenario.class, scenarioXml);
     }
 }

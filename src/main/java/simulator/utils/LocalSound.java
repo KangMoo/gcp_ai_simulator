@@ -66,4 +66,8 @@ public class LocalSound {
         microphone.close();
     }
 
+    public void play(byte[] data){
+        this.speakers.write(data, 0, data.length);
+    }
+
 }

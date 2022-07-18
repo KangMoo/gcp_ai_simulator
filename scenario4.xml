@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scenario>
+    <start id="피자주문_start">
+        <goto>tts_0</goto>
+    </start>
+
+    <tts id="tts_0" type="file">
+        <play>hello.pcm</play>
+        <goto>tts_1</goto>
+    </tts>
+
+    <tts id="tts_1" type="file">
+        <play>pizza_order.pcm</play>
+        <goto>stt_1</goto>
+    </tts>
+
+    <stt id="stt_1" duration="5" retry_cnt="3">
+        <variable>피자메뉴_대답</variable>
+        <goto>filter_1</goto>
+    </stt>
+
+    <filter id="filter_1">
+        <target>피자메뉴_대답</target>
+        <variable>피자메뉴</variable>
+        <condition type="contains">
+            <item>페퍼로니</item>
+            <item>콤비네이션</item>
+            <item>치즈</item>
+        </condition>
+        <success_goto>select_1</success_goto>
+        <fail_goto>tts_2</fail_goto>
+    </filter>
+
+    <tts id="tts_2" type="file">
+        <play>order_again.pcm</play>
+        <goto>stt_1</goto>
+    </tts>
+
+    <select id="select_1" play_item="true" retry_cnt="3">
+        <tts type="ment">
+            <play>${피자메뉴} 피자의 사이즈를 선택해주세요. 선택하실 수 있는 사이즈는 다음과 같습니다.</play>
+
+        </tts>
+        <stt duration="5" retry_cnt="3">
+            <variable>피자사이즈_대답</variable>
+        </stt>
+        <filter>
+            <target>피자사이즈_대답</target>
+            <variable>피자사이즈</variable>
+            <condition type="contains">
+                <item>패밀리</item>
+                <item>라지</item>
+                <item>미디움</item>
+                <item>레귤러</item>
+            </condition>
+        </filter>
+        <goto>tts_3</goto>
+    </select>
+
+    <tts id="tts_3" type="file">
+        <play>pizza_number.pcm</play>
+        <goto>stt_2</goto>
+    </tts>
+
+    <stt id="stt_2" duration="5" retry_cnt="3">
+        <variable>피자개수_대답</variable>
+        <goto>extract_1</goto>
+    </stt>
+
+    <extract id="extract_1" type="number">
+        <target>피자개수_대답</target>
+        <variable>피자개수</variable>
+        <success_goto>tts_5</success_goto>
+        <fail_goto>tts_4</fail_goto>
+    </extract>
+
+    <tts id="tts_4" type="file">
+        <play>order_again.pcm</play>
+        <goto>stt_2</goto>
+    </tts>
+
+    <tts id="tts_5" type="ment">
+        <play>주문하신 피자가 ${피자메뉴}, ${피자사이즈} 사이즈, ${피자개수} 판 맞으신가요?</play>
+        <goto>stt_3</goto>
+    </tts>
+
+    <stt id="stt_3">
+        <variable>주문확인_대답</variable>
+        <goto>filter_2</goto>
+    </stt>
+
+    <filter id="filter_2">
+        <target>주문확인_대답</target>
+        <variable>주문확인</variable>
+        <condition type="contains">
+            <item>네</item>
+            <item>예</item>
+        </condition>
+        <success_goto>tts_6</success_goto>
+        <fail_goto>tts_2</fail_goto>
+    </filter>
+
+    <tts id="tts_6" type="file">
+        <play>pizza_finish.pcm</play>
+        <goto>피자주문_end</goto>
+    </tts>
+
+    <end id="피자주문_end">
+        <save>
+            <variable>피자메뉴</variable>
+            <variable>피자사이즈</variable>
+            <variable>피자개수</variable>
+            <variable>주문확인</variable>
+        </save>
+    </end>
+</scenario>
