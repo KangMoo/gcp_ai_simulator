@@ -18,9 +18,10 @@ public class LocalSound {
     private TargetDataLine microphone;
     private SourceDataLine speakers;
     private AtomicBoolean isQuit = new AtomicBoolean(false);
-    private Consumer<byte[]> onDataFromMike = o -> {};
+    private Consumer<byte[]> onDataFromMike = o -> {
+    };
 
-    public void start(){
+    public void start() {
         AudioFormat format = new AudioFormat(16000, 16, 1, true, false);
         try {
             microphone = AudioSystem.getTargetDataLine(format);
@@ -48,7 +49,7 @@ public class LocalSound {
                         out.write(data, 0, data.length);
                         onDataFromMike.accept(data);
                     }
-                } catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             });
@@ -58,7 +59,7 @@ public class LocalSound {
         }
     }
 
-    public void stop(){
+    public void stop() {
         isQuit.set(true);
         executor.shutdown();
         speakers.drain();
@@ -66,7 +67,7 @@ public class LocalSound {
         microphone.close();
     }
 
-    public void play(byte[] data){
+    public void play(byte[] data) {
         this.speakers.write(data, 0, data.length);
     }
 

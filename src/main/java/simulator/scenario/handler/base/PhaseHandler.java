@@ -7,5 +7,6 @@ import simulator.scenario.phase.base.Phase;
  */
 public interface PhaseHandler {
     void handle() throws Exception;
+
     Phase getNextPhase();
 }

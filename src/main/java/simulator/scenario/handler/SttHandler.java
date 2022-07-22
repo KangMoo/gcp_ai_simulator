@@ -37,7 +37,8 @@ public class SttHandler implements PhaseHandler {
             sttConverter.start();
             scenarioInfo.getLocalSound().setOnDataFromMike(sttConverter::inputData);
             Thread.sleep(phase.getDuration() * 1000L + 100L);
-            scenarioInfo.getLocalSound().setOnDataFromMike(o -> {});
+            scenarioInfo.getLocalSound().setOnDataFromMike(o -> {
+            });
             sttConverter.stop();
             result = Optional.ofNullable(sttConverter.getResultTexts()).filter(o -> !o.isEmpty()).map(o -> o.get(o.size() - 1)).orElse(null);
             if (result == null) continue;

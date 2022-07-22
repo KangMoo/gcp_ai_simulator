@@ -17,9 +17,9 @@ public class SimMain {
     public static void main(String[] args) throws Exception {
         // GOOGLE_APPLICATION_CREDENTIALS=/Users/heokangmoo/.key/dulcet-metric-356107-415b9145a504.json
         ((LoggerContext) LoggerFactory.getILoggerFactory()).getLogger("io.grpc.netty").setLevel(Level.INFO);
-        ScenarioInfo result = new ScenarioRunner(ScenarioBuilder.buildScenarioInfo(new File("scenario4.xml"))).scenarioRun();
+        ScenarioInfo result = new ScenarioRunner(ScenarioBuilder.buildScenarioInfo(new File("scenario.xml"))).scenarioRun();
 
-        StringBuilder sb =new StringBuilder("결과 : ");
+        StringBuilder sb = new StringBuilder("결과 : ");
         result.getSavedData().forEach((k, v) -> sb.append("[").append(k).append(" : ").append(v).append("] "));
         System.out.println(sb);
     }

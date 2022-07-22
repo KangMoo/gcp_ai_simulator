@@ -1,164 +1,116 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>  
-<scenario name="pizza_order">
-    <tts>안녕하세요. 미스터피자입니다. 본 매장은 배달 전용 매장입니다.</tts>
+<?xml version="1.0" encoding="UTF-8"?>
+<scenario>
+    <start id="피자주문_start">
+        <goto>tts_0</goto>
+    </start>
 
-    <mark>pizza_select</mark>
-    <tts>주문하실 피자의 이름을 말씀해주세요. 피자는 페퍼로니, 고구마, 포테이토가 제공됩니다.</tts>
-    <stt duration="5000">pizza_menu</stt>
+    <tts id="tts_0" type="file">
+        <play>hello.pcm</play>
+        <goto>tts_1</goto>
+    </tts>
 
-    <if>
-        <expression><![CDATA[ 
-            typeof pizza_menu === 'undefined' || !(pizza_menu.includes("고구마") ||  pizza_menu.includes("페퍼로니") || pizza_menu.includes("포테이토"))]]></expression>
-        <jump>pizza_reselect</jump>
-    </if>
+    <tts id="tts_1" type="file">
+        <play>pizza_order.pcm</play>
+        <goto>stt_1</goto>
+    </tts>
 
-    <run>
-        <![CDATA[ 
-        if(pizza_menu.includes("고구마")) pizza_menu = "고구마";
-        else if(pizza_menu.includes("페퍼로니")) pizza_menu = "페퍼로니";
-        else if(pizza_menu.includes("포테이토")) pizza_menu = "포테이토";
-        ]]>
-    </run>
-    <mark>size_select</mark>
-    <tts>${pizza_menu} 피자는 2가지 사이즈로 제공됩니다. 레귤러 사이즈와 라지 사이즈 중 원하시는 것을 말씀해주세요</tts>
-    <stt duration="5000">pizza_size</stt>
+    <stt id="stt_1" duration="5" retry_cnt="3">
+        <variable>피자메뉴_대답</variable>
+        <goto>filter_1</goto>
+    </stt>
 
-    <if>
-        <expression><![CDATA[ typeof pizza_size === 'undefined' || !(pizza_size.includes("레귤러") ||  pizza_size.includes("라지"))]]></expression>
-        <jump>size_reselect</jump>
-    </if>
+    <filter id="filter_1">
+        <target>피자메뉴_대답</target>
+        <variable>피자메뉴</variable>
+        <condition type="contains">
+            <item>페퍼로니</item>
+            <item>콤비네이션</item>
+            <item>치즈</item>
+        </condition>
+        <success_goto>select_1</success_goto>
+        <fail_goto>tts_2</fail_goto>
+    </filter>
 
-    <run>
-        <![CDATA[ 
-        if(pizza_size.includes("레귤러")) pizza_size = "레귤러";
-        else if(pizza_size.includes("라지")) pizza_size = "라지";
-        ]]>
-    </run>
+    <tts id="tts_2" type="file">
+        <play>order_again.pcm</play>
+        <goto>stt_1</goto>
+    </tts>
 
-    <tts>${pizza_size} 사이즈를 고르셨습니다.</tts>
+    <select id="select_1" play_item="true" retry_cnt="3">
+        <tts type="ment">
+            <play>${피자메뉴} 피자의 사이즈를 선택해주세요. 선택하실 수 있는 사이즈는 다음과 같습니다.</play>
 
-    <mark>edge_select</mark>
-    <tts>${pizza_menu} 피자의 엣지는 오리진, 골드, 크림치즈, 에그타르트, 치즈캡이 제공됩니다. 원하시는 엣지 유형을 골라주세요</tts>
-    <stt duration="5000">pizza_edge</stt>
-    
-    <if>
-        <expression><![CDATA[
-            typeof pizza_edge === 'undefined' ||
-            !(pizza_edge.includes("오리진") ||  
-            pizza_edge.includes("골드") ||
-            pizza_edge.includes("크림치즈") ||
-            pizza_edge.includes("에그타르트") ||
-            pizza_edge.includes("치즈캡"))]]></expression>
-        <jump>edge_reselect</jump>
-    </if>
+        </tts>
+        <stt duration="5" retry_cnt="3">
+            <variable>피자사이즈_대답</variable>
+        </stt>
+        <filter>
+            <target>피자사이즈_대답</target>
+            <variable>피자사이즈</variable>
+            <condition type="contains">
+                <item>패밀리</item>
+                <item>라지</item>
+                <item>미디움</item>
+                <item>레귤러</item>
+            </condition>
+        </filter>
+        <goto>tts_3</goto>
+    </select>
 
-    <run>
-        <![CDATA[
-        if(pizza_edge.includes("오리진")) pizza_edge="오리진"; 
-        else if(pizza_edge.includes("골드")) pizza_edge="골드";  
-        else if(pizza_edge.includes("크림치즈")) pizza_edge="크림치즈"; 
-        else if(pizza_edge.includes("에그타르트")) pizza_edge="에그타르트"; 
-        else if(pizza_edge.includes("치즈캡")) pizza_edge="치즈캡"; 
-        ]]>
-    </run>
-    
-    <tts>${pizza_edge} 엣지를 고르셨습니다.</tts>
+    <tts id="tts_3" type="file">
+        <play>pizza_number.pcm</play>
+        <goto>stt_2</goto>
+    </tts>
 
-    <mark>count_select</mark>
-    <tts>피자의 주문 수량을 말씀해주세요</tts>
-    <stt duration="5000" digit="true">pizza_count</stt>
+    <stt id="stt_2" duration="5" retry_cnt="3">
+        <variable>피자개수_대답</variable>
+        <goto>extract_1</goto>
+    </stt>
 
-    <if>
-        <expression><![CDATA[
-            typeof pizza_count === 'undefined' || Number.isNaN(Number(pizza_count))
-            ]]></expression>
-        <jump>count_reselect</jump>
-    </if>
+    <extract id="extract_1" type="number">
+        <target>피자개수_대답</target>
+        <variable>피자개수</variable>
+        <success_goto>tts_5</success_goto>
+        <fail_goto>tts_4</fail_goto>
+    </extract>
 
-    <mark>drink_select</mark>
-    <tts>음료를 골라주세요. 음료는 콜라와 사이다가 제공됩니다</tts>
-    <stt duration="5000">drink</stt>
-    
-    <if>
-        <expression><![CDATA[
-            typeof drink === 'undefined' ||
-            !(drink.includes("콜라") ||  
-            drink.includes("사이다"))]]></expression>
-        <jump>drink_reselect</jump>
-    </if>
+    <tts id="tts_4" type="file">
+        <play>order_again.pcm</play>
+        <goto>stt_2</goto>
+    </tts>
 
-    <run>
-        <![CDATA[
-        if(drink.includes("콜라")) drink="콜라"; 
-        else if(drink.includes("사이다")) drink="사이다"; 
-        ]]>
-    </run>
+    <tts id="tts_5" type="ment">
+        <play>주문하신 피자가 ${피자메뉴}, ${피자사이즈} 사이즈, ${피자개수} 판 맞으신가요?</play>
+        <goto>stt_3</goto>
+    </tts>
 
-    <tts>${drink} 음료를 고르셨습니다</tts>
-    <mark>drink_count_select</mark>
-    <tts>음료 개수를 말씀해주세요.</tts>
-    <stt duration="5000" digit="true">drink_count</stt>
+    <stt id="stt_3">
+        <variable>주문확인_대답</variable>
+        <goto>filter_2</goto>
+    </stt>
 
-    <if>
-        <expression><![CDATA[
-            typeof drink_count === 'undefined' || Number.isNaN(Number(drink_count))
-            ]]></expression>
-        <jump>drink_count_reselect</jump>
-    </if>
+    <filter id="filter_2">
+        <target>주문확인_대답</target>
+        <variable>주문확인</variable>
+        <condition type="contains">
+            <item>네</item>
+            <item>예</item>
+        </condition>
+        <success_goto>tts_6</success_goto>
+        <fail_goto>tts_2</fail_goto>
+    </filter>
 
-    <mark>order_confirm</mark>
-    <tts>주문하신 피자는 ${pizza_menu}, 사이즈는 ${pizza_size}, 엣지는 ${pizza_edge}, 주문수량은 ${pizza_count} 입니다.
-        음료는 ${drink}, 갯수는 ${drink_count}입니다. 주문하신 정보가 맞습니까?</tts>
-    <stt duration="5000">confirm</stt>
+    <tts id="tts_6" type="file">
+        <play>pizza_finish.pcm</play>
+        <goto>피자주문_end</goto>
+    </tts>
 
-    <if>
-        <expression><![CDATA[ 
-            typeof confirm !== 'undefined' && confirm.includes("아니오")
-            ]]></expression>
-        <jump>reorder</jump>
-    </if>
-
-    <if>
-        <expression><![CDATA[ 
-            typeof confirm === 'undefined' ||
-            !(confirm.includes("예") || confirm.includes("네"))]]></expression>
-        <jump>order_reconfirm</jump>
-    </if>
-
-    <tts>감사합니다. 등록하신 주소로 1시간 내로 배달드리겠습니다</tts>
-    <jump>scenario_end</jump>
-
-    <mark>pizza_reselect</mark>
-    <tts>죄송합니다. 주문하신 피자는 제공되지 않습니다</tts>
-    <jump>pizza_select</jump>
-
-    <mark>size_reselect</mark>
-    <tts>죄송합니다. 말씀하신 사이즈는 제공되지 않습니다</tts>
-    <jump>size_select</jump>
-
-    <mark>edge_reselect</mark>
-    <tts>죄송합니다. 말씀하신 엣지는 제공되지 않습니다</tts>
-    <jump>edge_select</jump>
-
-    <mark>count_reselect</mark>
-    <tts>죄송합니다. 말씀을 이해하지 못했습니다</tts>
-    <jump>count_select</jump>
-
-    <mark>drink_reselect</mark>
-    <tts>죄송합니다. 말씀하신 음료는 제공되지 않습니다</tts>
-    <jump>drink_select</jump>
-
-    <mark>drink_count_reselect</mark>
-    <tts>죄송합니다. 말씀을 이해하지 못했습니다.</tts>
-    <jump>drink_count_select</jump>
-
-    <mark>reorder</mark>
-    <tts>주문 메뉴를 다시 받겠습니다.</tts>
-    <jump>pizza_select</jump>
-
-    <mark>order_reconfirm</mark>
-    <tts>죄송합니다. 말씀을 이해하지 못했습니다.</tts>
-    <jump>order_confirm</jump>
-
-    <mark>scenario_end</mark>
+    <end id="피자주문_end">
+        <save>
+            <variable>피자메뉴</variable>
+            <variable>피자사이즈</variable>
+            <variable>피자개수</variable>
+            <variable>주문확인</variable>
+        </save>
+    </end>
 </scenario>

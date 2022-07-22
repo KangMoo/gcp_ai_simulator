@@ -2,14 +2,11 @@ package simulator.scenario.handler;
 
 import lombok.Data;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import simulator.scenario.ScenarioInfo;
 import simulator.scenario.handler.base.PhaseHandler;
 import simulator.scenario.phase.base.Phase;
 import simulator.scenario.phase.element.SelectNode;
-
-import java.util.logging.Filter;
 
 /**
  * @author kangmoo Heo
@@ -39,7 +36,7 @@ public class SelectHandler implements PhaseHandler {
 
     @Override
     public void handle() throws Exception {
-        while(tryCnt++ <= phase.getRetryCnt() && !success){
+        while (tryCnt++ <= phase.getRetryCnt() && !success) {
             this.ttsHandler.handle();
 
             if (phase.isPlayItem()) {

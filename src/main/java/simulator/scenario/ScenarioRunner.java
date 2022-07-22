@@ -1,6 +1,5 @@
 package simulator.scenario;
 
-import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

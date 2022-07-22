@@ -11,7 +11,6 @@ import simulator.scenario.phase.element.EndNode;
 import simulator.scenario.phase.element.SaveNode;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 /**
