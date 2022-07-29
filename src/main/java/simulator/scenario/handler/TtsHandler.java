@@ -1,10 +1,9 @@
 package simulator.scenario.handler;
 
-import lombok.Data;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import simulator.scenario.ScenarioInfo;
+import simulator.scenario.ScenarioRunner;
 import simulator.scenario.handler.base.PhaseHandler;
 import simulator.scenario.phase.base.Phase;
 import simulator.scenario.phase.element.TtsNode;
@@ -19,14 +18,14 @@ import java.util.regex.Pattern;
  * @author kangmoo Heo
  */
 @Slf4j
-@RequiredArgsConstructor
-@Data
-public class TtsHandler implements PhaseHandler {
+@Getter
+@Setter
+public class TtsHandler extends PhaseHandler<TtsNode> {
     private static final Pattern VARIABLE_PATTERN = Pattern.compile("\\$\\{([^\\${}]+)\\}");
-    @NonNull
-    private ScenarioInfo scenarioInfo;
-    @NonNull
-    private TtsNode phase;
+
+    public TtsHandler(ScenarioRunner scenarioRunner) {
+        super(scenarioRunner);
+    }
 
     @Override
     public void handle() throws Exception {

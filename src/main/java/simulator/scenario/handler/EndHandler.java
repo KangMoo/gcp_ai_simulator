@@ -1,10 +1,9 @@
 package simulator.scenario.handler;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NonNull;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import simulator.scenario.ScenarioInfo;
+import simulator.scenario.ScenarioRunner;
 import simulator.scenario.handler.base.PhaseHandler;
 import simulator.scenario.phase.base.Phase;
 import simulator.scenario.phase.element.EndNode;
@@ -17,13 +16,13 @@ import java.util.Optional;
  * @author kangmoo Heo
  */
 @Slf4j
-@AllArgsConstructor
-@Data
-public class EndHandler implements PhaseHandler {
-    @NonNull
-    private ScenarioInfo scenarioInfo;
-    @NonNull
-    private EndNode phase;
+@Getter
+@Setter
+public class EndHandler extends PhaseHandler<EndNode> {
+
+    public EndHandler(ScenarioRunner scenarioRunner) {
+        super(scenarioRunner);
+    }
 
     @Override
     public void handle() {

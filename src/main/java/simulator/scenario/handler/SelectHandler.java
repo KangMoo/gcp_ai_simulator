@@ -1,9 +1,9 @@
 package simulator.scenario.handler;
 
-import lombok.Data;
-import lombok.NonNull;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import simulator.scenario.ScenarioInfo;
+import simulator.scenario.ScenarioRunner;
 import simulator.scenario.handler.base.PhaseHandler;
 import simulator.scenario.phase.base.Phase;
 import simulator.scenario.phase.element.SelectNode;
@@ -12,12 +12,9 @@ import simulator.scenario.phase.element.SelectNode;
  * @author kangmoo Heo
  */
 @Slf4j
-@Data
-public class SelectHandler implements PhaseHandler {
-    @NonNull
-    private ScenarioInfo scenarioInfo;
-    @NonNull
-    private SelectNode phase;
+@Getter
+@Setter
+public class SelectHandler extends PhaseHandler<SelectNode> {
 
     private boolean success;
     private int tryCnt = 0;
@@ -26,12 +23,16 @@ public class SelectHandler implements PhaseHandler {
     private SttHandler sttHandler;
     private FilterHandler filterHandler;
 
-    public SelectHandler(@NonNull ScenarioInfo scenarioInfo, @NonNull SelectNode phase) {
-        this.scenarioInfo = scenarioInfo;
-        this.phase = phase;
-        this.ttsHandler = new TtsHandler(scenarioInfo, phase.getTtsNode());
-        this.sttHandler = new SttHandler(scenarioInfo, phase.getSttNode());
-        this.filterHandler = new FilterHandler(scenarioInfo, phase.getFilterNode());
+    public SelectHandler(ScenarioRunner scenarioRunner) {
+        super(scenarioRunner);
+        this.ttsHandler = new TtsHandler(scenarioRunner);
+        this.ttsHandler.setPhase(phase.getTtsNode());
+
+        this.sttHandler = new SttHandler(scenarioRunner);
+        this.sttHandler.setPhase(phase.getSttNode());
+
+        this.filterHandler = new FilterHandler(scenarioRunner);
+        this.filterHandler.setPhase(phase.getFilterNode());
     }
 
     @Override

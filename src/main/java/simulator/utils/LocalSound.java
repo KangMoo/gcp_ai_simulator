@@ -1,6 +1,8 @@
 package simulator.utils;
 
+import com.sun.istack.NotNull;
 import lombok.Data;
+import simulator.utils.sound.InOutSound;
 
 import javax.sound.sampled.*;
 import java.io.ByteArrayOutputStream;
@@ -13,7 +15,7 @@ import java.util.function.Consumer;
  * @author kangmoo Heo
  */
 @Data
-public class LocalSound {
+public class LocalSound implements InOutSound {
     private ExecutorService executor = Executors.newSingleThreadExecutor();
     private TargetDataLine microphone;
     private SourceDataLine speakers;
@@ -59,16 +61,22 @@ public class LocalSound {
         }
     }
 
-    public void stop() {
+    @Override
+    public void onInputAction(@NotNull Consumer<byte[]> c) {
+        onDataFromMike = c;
+    }
+
+    @Override
+    public void play(byte[] data) {
+        this.speakers.write(data, 0, data.length);
+    }
+
+    @Override
+    public void close(){
         isQuit.set(true);
         executor.shutdown();
         speakers.drain();
         speakers.close();
         microphone.close();
     }
-
-    public void play(byte[] data) {
-        this.speakers.write(data, 0, data.length);
-    }
-
 }

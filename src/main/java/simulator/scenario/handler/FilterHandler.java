@@ -1,10 +1,9 @@
 package simulator.scenario.handler;
 
-import lombok.Data;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import simulator.scenario.ScenarioInfo;
+import simulator.scenario.ScenarioRunner;
 import simulator.scenario.handler.base.PhaseHandler;
 import simulator.scenario.phase.base.Phase;
 import simulator.scenario.phase.element.FilterNode;
@@ -13,16 +12,15 @@ import simulator.scenario.phase.element.FilterNode;
  * @author kangmoo Heo
  */
 @Slf4j
-@Data
-@RequiredArgsConstructor
-public class FilterHandler implements PhaseHandler {
-    @NonNull
-    private ScenarioInfo scenarioInfo;
-    @NonNull
-    private FilterNode phase;
+@Getter @Setter
+public class FilterHandler extends PhaseHandler<FilterNode> {
     private boolean success;
     private String mappedVar;
     private String target;
+
+    public FilterHandler(ScenarioRunner scenarioRunner) {
+        super(scenarioRunner);
+    }
 
     @Override
     public void handle() {

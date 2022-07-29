@@ -6,6 +6,8 @@ import lombok.Data;
 import simulator.scenario.phase.base.Phase;
 import simulator.utils.LocalSound;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -22,6 +24,8 @@ public class ScenarioInfo implements AutoCloseable {
     private SttConverter sttConverter;
     private TtsConverter ttsConverter;
     private LocalSound localSound;
+
+    private ByteArrayOutputStream soundStream = new ByteArrayOutputStream();
 
     public ScenarioInfo(SttConverter sttConverter, TtsConverter ttsConverter, LocalSound localSound, Map<String, Phase> phases) {
         this.sttConverter = sttConverter;
@@ -42,8 +46,16 @@ public class ScenarioInfo implements AutoCloseable {
         localSound.play(getTtsConverter().convertSsml(ssml).toByteArray());
     }
 
+    public void writeIncomingSound(byte[] b, int off, int len) {
+        this.soundStream.write(b, off, len);
+    }
+
+    public void writeIncomingSound(byte[] b) throws IOException {
+        this.soundStream.write(b);
+    }
+
     @Override
     public void close() {
-        if (this.localSound != null) this.localSound.stop();
+        if (this.localSound != null) this.localSound.close();
     }
 }
