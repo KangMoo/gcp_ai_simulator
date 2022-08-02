@@ -1,17 +1,15 @@
 package simulator.scenario.handler;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import simulator.scenario.ScenarioInfo;
 import simulator.scenario.ScenarioRunner;
 import simulator.scenario.handler.base.PhaseHandler;
-import simulator.scenario.phase.base.Phase;
 import simulator.scenario.phase.element.EndNode;
 import simulator.scenario.phase.element.SaveNode;
 
 import java.util.Collection;
 import java.util.Optional;
-import java.util.function.Consumer;
 
 /**
  * @author kangmoo Heo
@@ -33,7 +31,7 @@ public class EndHandler extends PhaseHandler<EndNode> {
                 .map(SaveNode::getVariables)
                 .stream().flatMap(Collection::stream)
                 .forEach(o -> scenarioInfo.getSavedData().put(o, scenarioInfo.getVariables().get(o)));
-        log.info("Scenario End!");
+        log.info("({}) Scenario End!", this.scenarioRunner.getId());
     }
 
 }

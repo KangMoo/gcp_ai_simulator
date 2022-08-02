@@ -1,11 +1,10 @@
 package simulator.scenario.handler;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import simulator.scenario.ScenarioInfo;
 import simulator.scenario.ScenarioRunner;
 import simulator.scenario.handler.base.PhaseHandler;
-import simulator.scenario.phase.base.Phase;
 import simulator.scenario.phase.element.StartNode;
 
 /**
@@ -22,7 +21,7 @@ public class StartHandler extends PhaseHandler<StartNode> {
 
     @Override
     public void handle() {
-        log.info("Scenario Start!");
+        log.info("({}) Scenario Start!", this.scenarioRunner.getId());
     }
 
 }

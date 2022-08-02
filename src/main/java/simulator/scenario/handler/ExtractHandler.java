@@ -24,6 +24,8 @@ public class ExtractHandler extends PhaseHandler<ExtractNode> {
 
     public ExtractHandler(ScenarioRunner scenarioRunner) {
         super(scenarioRunner);
+        if (phase.getNextPhaseIfSuccess() == null) phase.setNextPhaseIfSuccess(phase.getNextPhase());
+        if (phase.getNextPhaseIfFail() == null) phase.setNextPhaseIfFail(phase.getNextPhase());
     }
 
     @Override

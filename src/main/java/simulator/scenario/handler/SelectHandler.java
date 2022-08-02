@@ -83,7 +83,7 @@ public class SelectHandler extends PhaseHandler<SelectNode> {
         try {
             handle();
         } catch (Exception e) {
-            log.warn("{} Err Occurs", phase.getId(), e);
+            log.warn("({}) Err Occurs [{}]", this.scenarioRunner.getId(), phase.getId(), e);
             procDoneFail(e);
         }
     }

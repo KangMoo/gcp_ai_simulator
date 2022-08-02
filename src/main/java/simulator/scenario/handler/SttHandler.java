@@ -51,14 +51,14 @@ public class SttHandler extends PhaseHandler<SttNode> {
                         });
                         sttText = finalResult.get();
                         scenarioInfo.getVariables().put(phase.getVariable(), sttText);
-                        log.info("STT : {}", sttText);
+                        log.info("({}) STT : {}", this.scenarioRunner.getId(), sttText);
 
                         procDoneSuccess();
                     }, () -> executor.submit(() -> {
                         try {
                             handle();
                         } catch (Exception e) {
-                            log.warn("ERR Occurs while Handling STT Phase", e);
+                            log.warn("({}) ERR Occurs while Handling STT Phase", this.scenarioRunner.getId(), e);
                             procDoneFail(e);
                         }
                     }));
@@ -70,7 +70,7 @@ public class SttHandler extends PhaseHandler<SttNode> {
         try {
             handle();
         } catch (Exception e) {
-            log.warn("{} Err Occurs", phase.getId(), e);
+            log.warn("({}) Err Occurs [{}]", this.scenarioRunner.getId(), phase.getId(), e);
             procDoneFail(e);
         }
     }
@@ -78,14 +78,14 @@ public class SttHandler extends PhaseHandler<SttNode> {
     public void startStt() {
         scenarioInfo.getSttConverter().start();
         scenarioInfo.getLocalSound().onInputAction(scenarioInfo.getSttConverter()::inputData);
-        log.debug("STT START");
+        log.debug("({}) STT START", this.scenarioRunner.getId());
     }
 
     public void stopStt() {
         scenarioInfo.getLocalSound().onInputAction(o -> {
         });
         scenarioInfo.getSttConverter().stop();
-        log.debug("STT STOP");
+        log.debug("({}) STT STOP", this.scenarioRunner.getId());
     }
 
 }

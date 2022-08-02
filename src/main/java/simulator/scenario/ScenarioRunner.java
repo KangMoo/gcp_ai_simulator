@@ -65,7 +65,7 @@ public class ScenarioRunner {
         } else if (phase instanceof TtsNode) {
             return new TtsHandler(this);
         } else {
-            log.error("({}) Unknown instance type [{}]", this.id, phase.getClass().getName());
+            log.warn("({}) Unknown instance type [{}]", this.id, phase.getClass().getName());
             return null;
         }
     }

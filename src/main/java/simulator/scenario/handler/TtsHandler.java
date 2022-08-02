@@ -37,11 +37,11 @@ public class TtsHandler extends PhaseHandler<TtsNode> {
                         ttsText = matcher.replaceFirst(scenarioInfo.getVariables().get(matcher.group(1)));
                         matcher = VARIABLE_PATTERN.matcher(ttsText);
                     }
-                    log.info("TTS : {}", ttsText);
+                    log.info("({}) TTS : {}", this.scenarioRunner.getId(), ttsText);
                     scenarioInfo.playTtsText(ttsText);
                     break;
                 case "file":
-                    log.info("File play : {}", phase.getPlay());
+                    log.info("({}) File play : {}", this.scenarioRunner.getId(), phase.getPlay());
                     scenarioInfo.getLocalSound().play(Files.readAllBytes(Path.of(new File(phase.getPlay()).getAbsolutePath())));
                     break;
                 default:

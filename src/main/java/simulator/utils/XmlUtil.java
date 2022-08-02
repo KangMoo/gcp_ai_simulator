@@ -42,7 +42,7 @@ public class XmlUtil {
             dbFactory.setCoalescing(true);
             documentbuilder = dbFactory.newDocumentBuilder();
         } catch (Exception e) {
-            log.warn("Fail to build documentBuilder");
+            log.warn("Fail to build documentBuilder", e);
         }
     }
 

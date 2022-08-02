@@ -20,8 +20,8 @@ public class FilterHandler extends PhaseHandler<FilterNode> {
 
     public FilterHandler(ScenarioRunner scenarioRunner) {
         super(scenarioRunner);
-        if(phase.getNextPhaseIfSuccess() == null) phase.setNextPhaseIfSuccess(phase.getNextPhase());
-        if(phase.getNextPhaseIfFail() == null) phase.setNextPhaseIfFail(phase.getNextPhase());
+        if (phase.getNextPhaseIfSuccess() == null) phase.setNextPhaseIfSuccess(phase.getNextPhase());
+        if (phase.getNextPhaseIfFail() == null) phase.setNextPhaseIfFail(phase.getNextPhase());
     }
 
     @Override
@@ -42,7 +42,7 @@ public class FilterHandler extends PhaseHandler<FilterNode> {
         if (success) {
             this.scenarioInfo.getVariables().put(phase.getVariable(), mappedVar);
         }
-        log.debug("Filter result [{}]", this.success ? "Success" : "Fail");
+        log.debug("({}) Filter result [{}]", this.scenarioRunner.getId(), this.success ? "Success" : "Fail");
     }
 
     @Override
