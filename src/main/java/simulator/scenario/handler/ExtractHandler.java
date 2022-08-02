@@ -1,11 +1,10 @@
 package simulator.scenario.handler;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import simulator.scenario.ScenarioInfo;
 import simulator.scenario.ScenarioRunner;
 import simulator.scenario.handler.base.PhaseHandler;
-import simulator.scenario.phase.base.Phase;
 import simulator.scenario.phase.element.ExtractNode;
 
 import java.util.Optional;
@@ -16,7 +15,8 @@ import java.util.regex.Pattern;
  * @author kangmoo Heo
  */
 @Slf4j
-@Getter @Setter
+@Getter
+@Setter
 public class ExtractHandler extends PhaseHandler<ExtractNode> {
     private static final Pattern NUM_PATTERN = Pattern.compile("(\\d+)");
 
@@ -42,9 +42,7 @@ public class ExtractHandler extends PhaseHandler<ExtractNode> {
     }
 
     @Override
-    public Phase getNextPhase() {
-        return success ?
-                scenarioInfo.findPhase(phase.getNextPhaseIfSuccess()) :
-                scenarioInfo.findPhase(phase.getNextPhaseIfFail());
+    public String getNextPhase() {
+        return success ? phase.getNextPhaseIfSuccess() : phase.getNextPhaseIfFail();
     }
 }

@@ -1,18 +1,18 @@
 package simulator.scenario.handler;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import simulator.scenario.ScenarioInfo;
 import simulator.scenario.ScenarioRunner;
 import simulator.scenario.handler.base.PhaseHandler;
-import simulator.scenario.phase.base.Phase;
 import simulator.scenario.phase.element.FilterNode;
 
 /**
  * @author kangmoo Heo
  */
 @Slf4j
-@Getter @Setter
+@Getter
+@Setter
 public class FilterHandler extends PhaseHandler<FilterNode> {
     private boolean success;
     private String mappedVar;
@@ -20,6 +20,8 @@ public class FilterHandler extends PhaseHandler<FilterNode> {
 
     public FilterHandler(ScenarioRunner scenarioRunner) {
         super(scenarioRunner);
+        if(phase.getNextPhaseIfSuccess() == null) phase.setNextPhaseIfSuccess(phase.getNextPhase());
+        if(phase.getNextPhaseIfFail() == null) phase.setNextPhaseIfFail(phase.getNextPhase());
     }
 
     @Override
@@ -44,9 +46,7 @@ public class FilterHandler extends PhaseHandler<FilterNode> {
     }
 
     @Override
-    public Phase getNextPhase() {
-        return success ?
-                scenarioInfo.findPhase(phase.getNextPhaseIfSuccess()) :
-                scenarioInfo.findPhase(phase.getNextPhaseIfFail());
+    public String getNextPhase() {
+        return success ? phase.getNextPhaseIfSuccess() : phase.getNextPhaseIfFail();
     }
 }

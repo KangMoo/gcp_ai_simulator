@@ -1,11 +1,10 @@
 package simulator.scenario.handler;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import simulator.scenario.ScenarioInfo;
 import simulator.scenario.ScenarioRunner;
 import simulator.scenario.handler.base.PhaseHandler;
-import simulator.scenario.phase.base.Phase;
 import simulator.scenario.phase.element.TtsNode;
 
 import java.io.File;
@@ -28,29 +27,29 @@ public class TtsHandler extends PhaseHandler<TtsNode> {
     }
 
     @Override
-    public void handle() throws Exception {
-        switch (phase.getType()) {
-            case "ment":
-                String ttsText = phase.getPlay();
-                Matcher matcher = VARIABLE_PATTERN.matcher(ttsText);
-                while (matcher.find()) {
-                    ttsText = matcher.replaceFirst(scenarioInfo.getVariables().get(matcher.group(1)));
-                    matcher = VARIABLE_PATTERN.matcher(ttsText);
-                }
-                log.info("TTS : {}", ttsText);
-                scenarioInfo.playTtsText(ttsText);
-                break;
-            case "file":
-                log.info("File play : {}", phase.getPlay());
-                scenarioInfo.getLocalSound().play(Files.readAllBytes(Path.of(new File(phase.getPlay()).getAbsolutePath())));
-                break;
-            default:
-                throw new NullPointerException("TTS Type is Unknown [" + phase.getType() + "]");
+    public void handle() {
+        try {
+            switch (phase.getType()) {
+                case "ment":
+                    String ttsText = phase.getPlay();
+                    Matcher matcher = VARIABLE_PATTERN.matcher(ttsText);
+                    while (matcher.find()) {
+                        ttsText = matcher.replaceFirst(scenarioInfo.getVariables().get(matcher.group(1)));
+                        matcher = VARIABLE_PATTERN.matcher(ttsText);
+                    }
+                    log.info("TTS : {}", ttsText);
+                    scenarioInfo.playTtsText(ttsText);
+                    break;
+                case "file":
+                    log.info("File play : {}", phase.getPlay());
+                    scenarioInfo.getLocalSound().play(Files.readAllBytes(Path.of(new File(phase.getPlay()).getAbsolutePath())));
+                    break;
+                default:
+                    throw new NullPointerException("TTS Type is Unknown [" + phase.getType() + "]");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
-    @Override
-    public Phase getNextPhase() {
-        return scenarioInfo.findPhase(phase.getNextPhase());
-    }
 }

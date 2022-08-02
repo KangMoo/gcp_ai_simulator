@@ -10,7 +10,11 @@ import simulator.scenario.handler.base.PhaseHandler;
 import simulator.scenario.phase.base.Phase;
 import simulator.scenario.phase.element.*;
 
-import java.util.concurrent.*;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
 
 
 /**
@@ -24,32 +28,23 @@ public class ScenarioRunner {
     @NonNull
     private ScenarioInfo scenarioInfo;
 
-    // @NonNull
-    private String id;
+    @NonNull
+    private ScheduledExecutorService executor;
 
-    // @NonNull
-    private ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+    private String id = UUID.randomUUID().toString();
+
+    private boolean scenarioComplete;
 
     private Phase currentPhase;
-
-    private boolean scenarioEnd = false;
-    private Runnable onScenarioEnd;
-
+    private Runnable onScenarioDone;
     private CompletableFuture<ScenarioInfo> result;
+
     public Future<ScenarioInfo> scenarioRun() {
         result = new CompletableFuture<>();
-        try {
-            Phase startPhase = scenarioInfo.getPhases().values().stream().filter(StartNode.class::isInstance).findAny().orElse(null);
-            if (startPhase == null) {
-                log.warn("Start Phase is null.");
-                stop();
-                return result;
-            }
-            runPhase(startPhase);
-        } catch (Exception e) {
-            log.warn("Err Occurs", e);
-            stop();
-        }
+        Phase startPhase = scenarioInfo.getPhases().values().stream().filter(StartNode.class::isInstance).findAny()
+                .orElseThrow(() -> new NullPointerException("Start Phase is null."));
+
+        runPhase(startPhase);
         return result;
     }
 
@@ -70,34 +65,27 @@ public class ScenarioRunner {
         } else if (phase instanceof TtsNode) {
             return new TtsHandler(this);
         } else {
-            log.error("Unknown instance type [{}]", phase.getClass().getName());
+            log.error("({}) Unknown instance type [{}]", this.id, phase.getClass().getName());
             return null;
         }
     }
 
     public void runPhase(Phase phase) {
-        if(phase == null) {
-            stop();
-            return;
-        }
-
-        log.debug("{} Phase Start", phase.getId());
+        log.debug("({}) Phase Start [{}]", this.id, phase.getId());
         executor.execute(() -> {
             try {
                 this.currentPhase = phase;
                 this.buildPhaseHandler(phase).proc();
-                log.debug("{} Phase Done", phase.getId());
             } catch (Exception e) {
-                log.error("{} Phase Fail. ERR Occurs", phase.getId(), e);
                 stop();
             }
         });
     }
 
     public void stop() {
-        this.scenarioEnd = true;
+        log.info("({}) Scenario End", this.id);
+        this.scenarioComplete = true;
         this.result.complete(scenarioInfo);
-        if (onScenarioEnd != null) onScenarioEnd.run();
-
+        if (this.onScenarioDone != null) onScenarioDone.run();
     }
 }

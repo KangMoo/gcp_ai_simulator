@@ -11,6 +11,7 @@ import simulator.scenario.phase.element.SaveNode;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * @author kangmoo Heo
@@ -22,6 +23,7 @@ public class EndHandler extends PhaseHandler<EndNode> {
 
     public EndHandler(ScenarioRunner scenarioRunner) {
         super(scenarioRunner);
+        setOnProcSuccess(scenarioRunner::stop);
     }
 
     @Override
@@ -34,8 +36,4 @@ public class EndHandler extends PhaseHandler<EndNode> {
         log.info("Scenario End!");
     }
 
-    @Override
-    public Phase getNextPhase() {
-        return null;
-    }
 }

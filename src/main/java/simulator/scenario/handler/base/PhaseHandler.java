@@ -7,7 +7,10 @@ import simulator.scenario.ScenarioInfo;
 import simulator.scenario.ScenarioRunner;
 import simulator.scenario.phase.base.Phase;
 
+import java.io.IOException;
+import java.util.Optional;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.function.Consumer;
 
 /**
  * @author kangmoo Heo
@@ -20,6 +23,14 @@ public abstract class PhaseHandler<T extends Phase> {
     protected ScenarioInfo scenarioInfo;
     protected T phase;
     protected ScheduledExecutorService executor;
+    private Runnable onProcSuccess = () -> Optional.ofNullable(getNextPhase()).ifPresent(p -> scenarioRunner.runPhase(scenarioInfo.getPhases().get(p)));
+
+    private Consumer<Exception> onProcFail = e -> {
+        if (e != null){
+            log.warn("Err Occurs", e);
+        }
+        scenarioRunner.stop();
+    };
 
     protected PhaseHandler(ScenarioRunner scenarioRunner) {
         this.scenarioRunner = scenarioRunner;
@@ -28,21 +39,35 @@ public abstract class PhaseHandler<T extends Phase> {
         this.executor = scenarioRunner.getExecutor();
     }
 
-    public void runNextPhase() {
-        scenarioRunner.runPhase(getNextPhase());
-    }
-
     public void proc() {
         try {
             handle();
-            scenarioRunner.runPhase(getNextPhase());
+            procDoneSuccess();
         } catch (Exception e) {
             log.warn("{} Err Occurs", phase.getId(), e);
-            scenarioRunner.stop();
+            procDoneFail(e);
         }
     }
 
-    protected abstract void handle() throws Exception;
+    public void procDoneSuccess() {
+        this.onProcSuccess.run();
+    }
 
-    protected abstract Phase getNextPhase();
+    public void procDoneFail() {
+        this.procDoneFail((Exception) null);
+    }
+
+    public void procDoneFail(String reason) {
+        this.procDoneFail(new RuntimeException(reason));
+    }
+
+    public void procDoneFail(Exception e) {
+        this.onProcFail.accept(e);
+    }
+
+    protected abstract void handle() throws IOException;
+
+    protected String getNextPhase() {
+        return phase.getNextPhase();
+    }
 }

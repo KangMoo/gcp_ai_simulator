@@ -1,6 +1,7 @@
 package simulator.scenario.phase.element;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
@@ -11,6 +12,7 @@ import simulator.scenario.phase.base.Phase;
  */
 @Root(name = "select")
 @Getter
+@Setter
 public class SelectNode extends Phase {
     @Attribute(name = "play_item", required = false)
     private boolean playItem = true;

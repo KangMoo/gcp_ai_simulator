@@ -39,7 +39,6 @@
     <select id="select_1" play_item="true" retry_cnt="3">
         <tts type="ment">
             <play>${피자메뉴} 피자의 사이즈를 선택해주세요. 선택하실 수 있는 사이즈는 다음과 같습니다.</play>
-
         </tts>
         <stt duration="5" retry_cnt="3">
             <variable>피자사이즈_대답</variable>

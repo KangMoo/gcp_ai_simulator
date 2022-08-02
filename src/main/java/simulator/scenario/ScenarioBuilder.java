@@ -14,6 +14,7 @@ import simulator.utils.LocalSound;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -72,6 +73,36 @@ public class ScenarioBuilder {
         localSound.start();
 
         return new ScenarioInfo(sttConverter, ttsConverter, localSound, phases);
+    }
+
+    public static Map<String, Phase> buildPhaseChain(String id, List<Phase> phases) {
+        for (int i = 0; i < phases.size(); i++) {
+            Phase phase = phases.get(i);
+            phase.setId(id + "_" + i);
+            phase.setNextPhase(id + "_" + (i + 1));
+        }
+
+        Map<String, Phase> phaseMap = new ConcurrentHashMap<>();
+        phases.forEach(o -> phaseMap.put(o.getId(), o));
+
+        return phaseMap;
+    }
+
+    public static Map<String, Phase> buildPhaseChain(String id, Phase... phases) {
+        return buildPhaseChain(id, Arrays.asList(phases));
+    }
+
+    public static ScenarioInfo buildSubScenario(String id, ScenarioInfo mainScenario, List<Phase> phases) {
+        return new ScenarioInfo(
+                mainScenario.getSttConverter(),
+                mainScenario.getTtsConverter(),
+                mainScenario.getLocalSound(),
+                buildPhaseChain(id, phases)
+        );
+    }
+
+    public static ScenarioInfo buildSubScenario(String id, ScenarioInfo mainScenario, Phase... phases) {
+        return buildSubScenario(id, mainScenario, Arrays.asList(phases));
     }
 
     private static Scenario parseScenarioFile(File scenarioXml) throws Exception {

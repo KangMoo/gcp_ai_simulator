@@ -25,8 +25,4 @@ public class StartHandler extends PhaseHandler<StartNode> {
         log.info("Scenario Start!");
     }
 
-    @Override
-    public Phase getNextPhase() {
-        return scenarioInfo.findPhase(phase.getNextPhase());
-    }
 }

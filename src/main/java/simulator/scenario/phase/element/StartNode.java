@@ -1,6 +1,7 @@
 package simulator.scenario.phase.element;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.simpleframework.xml.Root;
 import simulator.scenario.phase.base.Phase;
 
@@ -9,5 +10,6 @@ import simulator.scenario.phase.base.Phase;
  */
 @Root(name = "start")
 @Getter
+@Setter
 public class StartNode extends Phase {
 }

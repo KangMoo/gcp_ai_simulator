@@ -1,6 +1,7 @@
 package simulator.scenario.phase.element;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 import simulator.scenario.phase.base.Phase;
@@ -10,6 +11,7 @@ import simulator.scenario.phase.base.Phase;
  */
 @Root(name = "filter")
 @Getter
+@Setter
 public class FilterNode extends Phase {
     @Element(name = "target")
     private String target;

@@ -3,6 +3,7 @@ package simulator.scenario;
 import ai.media.stt.SttConverter;
 import ai.media.tts.TtsConverter;
 import lombok.Data;
+import simulator.scenario.handler.base.PhaseHandler;
 import simulator.scenario.phase.base.Phase;
 import simulator.utils.LocalSound;
 
@@ -17,7 +18,6 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Data
 public class ScenarioInfo implements AutoCloseable {
-    private String name;
     private Map<String, Phase> phases;
     private Map<String, String> variables = new ConcurrentHashMap<>();
     private Map<String, String> savedData = new ConcurrentHashMap<>();
@@ -31,6 +31,10 @@ public class ScenarioInfo implements AutoCloseable {
         this.sttConverter = sttConverter;
         this.ttsConverter = ttsConverter;
         this.localSound = localSound;
+        this.phases = phases;
+    }
+
+    public ScenarioInfo(Map<String, Phase> phases) {
         this.phases = phases;
     }
 

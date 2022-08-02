@@ -1,6 +1,7 @@
 package simulator.scenario.phase.element;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
@@ -13,6 +14,7 @@ import java.util.List;
  */
 @Root(name = "condition")
 @Getter
+@Setter
 public class ConditionNode extends Phase {
     @Attribute(name = "type")
     private String type;
