@@ -24,7 +24,6 @@ public abstract class PhaseHandler<T extends Phase> {
     protected T phase;
     protected ScheduledExecutorService executor;
     private Runnable onProcSuccess = () -> Optional.ofNullable(getNextPhase()).ifPresent(p -> scenarioRunner.runPhase(scenarioInfo.getPhases().get(p)));
-
     private Consumer<Exception> onProcFail = e -> {
         if (e != null) {
             log.warn("({}) Err Occurs [{}]", this.scenarioRunner.getId(), this.phase.getId(), e);
@@ -69,4 +68,6 @@ public abstract class PhaseHandler<T extends Phase> {
     protected String getNextPhase() {
         return phase.getNextPhase();
     }
+
+
 }

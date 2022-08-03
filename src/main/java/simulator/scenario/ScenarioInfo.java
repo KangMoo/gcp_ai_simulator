@@ -3,7 +3,6 @@ package simulator.scenario;
 import ai.media.stt.SttConverter;
 import ai.media.tts.TtsConverter;
 import lombok.Data;
-import simulator.scenario.handler.base.PhaseHandler;
 import simulator.scenario.phase.base.Phase;
 import simulator.utils.LocalSound;
 

@@ -21,13 +21,13 @@ public class SimMain {
         // GOOGLE_APPLICATION_CREDENTIALS=/Users/heokangmoo/.key/dulcet-metric-356107-415b9145a504.json
         ((LoggerContext) LoggerFactory.getILoggerFactory()).getLogger("io.grpc.netty").setLevel(Level.INFO);
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-        try (ScenarioInfo scenarioInfo = ScenarioBuilder.buildScenarioInfo(new File("scenario.xml"))){
+        try (ScenarioInfo scenarioInfo = ScenarioBuilder.buildScenarioInfo(new File("scenario.xml"))) {
             Future<ScenarioInfo> result = new ScenarioRunner(scenarioInfo, executor).scenarioRun();
 
             StringBuilder sb = new StringBuilder("결과 : ");
             result.get().getSavedData().forEach((k, v) -> sb.append("[").append(k).append(" : ").append(v).append("] "));
             System.out.println(sb);
-        }finally {
+        } finally {
             executor.shutdown();
         }
     }

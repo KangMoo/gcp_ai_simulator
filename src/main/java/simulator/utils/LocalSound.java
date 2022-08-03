@@ -72,7 +72,7 @@ public class LocalSound implements InOutSound {
     }
 
     @Override
-    public void close(){
+    public void close() {
         isQuit.set(true);
         executor.shutdown();
         speakers.drain();
