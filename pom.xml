@@ -153,7 +153,7 @@
                                 </transformer>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>simulator.SimMain</mainClass>
+                                    <mainClass>com.uangel.simulator.SimMain</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
